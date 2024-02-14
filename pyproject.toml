@@ -11,6 +11,7 @@ requires-python = ">= 3.8"
 
 [project.scripts]
 hello = "python_mastery:hello"
+pcost = "python_mastery:pcost"
 
 [build-system]
 requires = ["hatchling"]
