@@ -117,6 +117,7 @@ if __name__ == "__main__":
             "slobs": read_rides_as_slobjects,
             }
 
+    reader, filename = callmap[sys.argv[2]], sys.argv[1]
     tracemalloc.start()
-    rows = callmap[sys.argv[2]](sys.argv[1])
+    rows = reader(filename)
     print('Memory Use: Current %d, Peak %d' % tracemalloc.get_traced_memory())
