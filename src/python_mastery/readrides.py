@@ -102,6 +102,32 @@ def read_rides_as_slobjects(filename):
             records.append(SlotRide(route, date, daytype, int(rides)))
     return records
 
+def anal(dicts):
+
+    # how many bus routes exist in Chicago
+    routes = {d['route'] for d in dicts}
+    print('Number of bus routes: ', len(routes))
+
+    # how many people rode the number 22 bus on February 2, 2011?
+    rides = [d['rides'] for d in dicts if d['route']=='22' and d['date']=='02/02/2011']
+    print('Riders on a given day: ', sum(rides))
+
+    # what's the total number of rides taken on each bus route?
+    from collections import Counter
+    totals = Counter()
+    for d in dicts:
+        totals[d['route']] += d['rides']
+    print('Total rides by route: ', totals.most_common(5))
+
+    # what five bus routes had the greatest ten-year increase in ridershiop from 2001 to 2011?
+    old = {d['route']: d['rides'] for d in dicts if d['date'].endswith('2001')}
+    new = {d['route']: d['rides'] for d in dicts if d['date'].endswith('2011')}
+    increases = Counter()
+    for route, rides in new.items():
+        increases[route] += rides - old.get(route, 0)
+    print('Top five increases: ', increases.most_common(5))
+
+
 if __name__ == "__main__":
     import sys
     import tracemalloc
@@ -119,5 +145,8 @@ if __name__ == "__main__":
 
     reader, filename = callmap[sys.argv[2]], sys.argv[1]
     tracemalloc.start()
-    rows = reader(filename)
+    recs = reader(filename)
     print('Memory Use: Current %d, Peak %d' % tracemalloc.get_traced_memory())
+
+    if sys.argv[2] == 'dicts':
+        anal(recs)
